@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="about" data-title="navAbout">
+  <div id="site-header"></div>
+  <main>
+    <section class="page-head"><div class="wrap">
+      <h1 data-i18n="aboutTitle"></h1>
+      <p class="muted" data-i18n="aboutSub"></p>
+    </div></section>
+
+    <section class="section"><div class="wrap">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+        <div class="panel"><h3 data-i18n="missionT"></h3><p data-i18n="missionD"></p></div>
+        <div class="panel" style="margin-top:0"><h3 data-i18n="storyT"></h3><p data-i18n="storyD"></p></div>
+      </div>
+    </div></section>
+
+    <section class="section" style="background:#fff"><div class="wrap">
+      <h2 class="center" style="margin-bottom:24px" data-i18n="whyTitle"></h2>
+      <div class="grid">
+        <div class="card feature"><div class="icon">🗺️</div><h3 data-i18n="why1t"></h3><p class="muted" data-i18n="why1d"></p></div>
+        <div class="card feature"><div class="icon">📝</div><h3 data-i18n="why2t"></h3><p class="muted" data-i18n="why2d"></p></div>
+        <div class="card feature"><div class="icon">💰</div><h3 data-i18n="why3t"></h3><p class="muted" data-i18n="why3d"></p></div>
+      </div>
+    </div></section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="app.js"></script>
+  <script>TP.init();</script>
+</body>
+</html>

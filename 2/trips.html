@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Trips</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    data-page="trips"
+    data-auth="required"
+    data-area="user"
+    data-title="navTrips"
+  >
+    <div id="site-header"></div>
+    <main>
+      <div class="wrap section">
+        <div class="section-head">
+          <h1 data-i18n="tripsTitle"></h1>
+          <a class="btn btn-primary" href="trip-form.html"
+            >+ <span data-i18n="navAdd"></span
+          ></a>
+        </div>
+        <div class="toolbar">
+          <select id="filter" aria-label="Status"></select>
+        </div>
+        <div id="list" class="grid"></div>
+      </div>
+    </main>
+    <div id="site-footer"></div>
+    <script src="app.js"></script>
+    <script>
+      var filter = document.getElementById("filter");
+      filter.addEventListener("change", function () {
+        window.render();
+      });
+
+      window.render = function () {
+        var T = TP.t,
+          cur = filter.value || "all";
+        filter.innerHTML = [
+          ["all", "filterAll"],
+          ["upcoming", "sUpcoming"],
+          ["ongoing", "sOngoing"],
+          ["done", "sDone"],
+        ]
+          .map(function (o) {
+            return (
+              '<option value="' +
+              o[0] +
+              '"' +
+              (o[0] === cur ? " selected" : "") +
+              ">" +
+              T(o[1]) +
+              "</option>"
+            );
+          })
+          .join("");
+
+        var all = TP.allTrips();
+        var items = all
+          .filter(function (x) {
+            return cur === "all" || TP.tripStatus(x) === cur;
+          })
+          .sort(function (a, b) {
+            return a.start < b.start ? -1 : 1;
+          });
+        var list = document.getElementById("list");
+        if (!all.length) {
+          list.style.display = "block";
+          list.innerHTML =
+            '<div class="panel empty"><p class="muted">' +
+            T("noTrips") +
+            '</p><a class="btn btn-primary" href="trip-form.html">' +
+            T("createFirst") +
+            "</a></div>";
+        } else if (!items.length) {
+          list.style.display = "block";
+          list.innerHTML = '<p class="muted">' + T("noTrips") + "</p>";
+        } else {
+          list.style.display = "";
+          list.innerHTML = items.map(TP.tripCard).join("");
+        }
+      };
+
+      document.getElementById("list").addEventListener("click", function (e) {
+        var id = e.target.dataset && e.target.dataset.del;
+        if (id && confirm(TP.t("confirmDel"))) {
+          TP.deleteTrip(id);
+          window.render();
+        }
+      });
+      TP.init();
+    </script>
+  </body>
+</html>
