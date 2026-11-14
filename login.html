@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="login" data-auth="guest" data-title="navLogin">
+  <div id="site-header"></div>
+  <main>
+    <div class="wrap">
+      <div class="panel form-card">
+        <div class="tabs">
+          <button type="button" class="tab" id="tab-login" data-i18n="tabLogin"></button>
+          <button type="button" class="tab" id="tab-signup" data-i18n="tabSignup"></button>
+        </div>
+        <h2 id="title" style="margin-bottom:16px"></h2>
+        <div class="alert alert-error" id="err" hidden></div>
+
+        <form id="auth-form" novalidate>
+          <div class="field" id="name-field"><label for="a-name" data-i18n="fName"></label><input id="a-name" autocomplete="name"></div>
+          <div class="field"><label for="a-email" data-i18n="fEmail"></label><input id="a-email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="a-pass" data-i18n="fPass"></label><input id="a-pass" type="password" autocomplete="current-password" required></div>
+          <div class="field" id="confirm-field"><label for="a-confirm" data-i18n="fConfirm"></label><input id="a-confirm" type="password" autocomplete="new-password"></div>
+          <button class="btn btn-primary" style="width:100%" type="submit" id="submit"></button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="app.js"></script>
+  <script>
+    var mode = TP.params().get('tab') === 'signup' ? 'signup' : 'login';
+    var $ = function (id) { return document.getElementById(id); };
+
+    function setMode(m) {
+      mode = m;
+      var s = m === 'signup';
+      $('name-field').hidden = !s;
+      $('confirm-field').hidden = !s;
+      $('title').dataset.i18n = s ? 'signupTitle' : 'loginTitle';
+      $('submit').dataset.i18n = s ? 'tabSignup' : 'tabLogin';
+      $('tab-login').classList.toggle('active', !s);
+      $('tab-signup').classList.toggle('active', s);
+      $('a-pass').autocomplete = s ? 'new-password' : 'current-password';
+      $('err').hidden = true;
+      TP.applyI18n();
+    }
+    $('tab-login').addEventListener('click', function () { setMode('login'); });
+    $('tab-signup').addEventListener('click', function () { setMode('signup'); });
+
+    $('auth-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = $('a-email').value, pass = $('a-pass').value, r;
+      if (mode === 'signup') r = TP.signup($('a-name').value, email, pass, $('a-confirm').value);
+      else r = email && pass ? TP.login(email, pass) : { error: 'errRequired' };
+      if (r.error) {
+        $('err').dataset.i18n = r.error;
+        $('err').hidden = false;
+        TP.applyI18n();
+        return;
+      }
+      location.href = TP.safeNext(TP.params().get('next')) || 'dashboard.html';
+    });
+
+    TP.init();
+    setMode(mode);
+  </script>
+</body>
+</html>

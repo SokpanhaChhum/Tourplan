@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Destinations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="destinations" data-title="navDest">
+  <div id="site-header"></div>
+  <main>
+    <section class="page-head"><div class="wrap">
+      <h1 data-i18n="destTitle"></h1>
+      <p class="muted" data-i18n="destSub"></p>
+    </div></section>
+    <section class="section"><div class="wrap">
+      <div class="toolbar"><input type="search" id="q" data-i18n-ph="searchPh"></div>
+      <div id="list" class="grid"></div>
+    </div></section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="app.js"></script>
+  <script>
+    var q = document.getElementById('q');
+    q.addEventListener('input', function () { window.render(); });
+    window.render = function () {
+      var term = q.value.trim().toLowerCase();
+      var items = TP.DESTS.filter(function (d) {
+        return !term || (d.name.en + ' ' + d.name.km + ' ' + d.region.en + ' ' + d.region.km).toLowerCase().indexOf(term) > -1;
+      });
+      document.getElementById('list').innerHTML = items.length
+        ? items.map(TP.destCard).join('')
+        : '<p class="muted">' + TP.t('noResults') + '</p>';
+    };
+    TP.init();
+  </script>
+</body>
+</html>

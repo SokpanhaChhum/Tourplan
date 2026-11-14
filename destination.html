@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Destination</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="destination" data-title="navDest">
+  <div id="site-header"></div>
+  <main id="main"></main>
+  <div id="site-footer"></div>
+  <script src="app.js"></script>
+  <script>
+    window.render = function () {
+      var T = TP.t, d = TP.destById(TP.params().get('id')), main = document.getElementById('main');
+      if (!d) {
+        main.innerHTML = '<div class="wrap"><div class="empty"><p>' + T('notFound') + '</p><a class="btn btn-primary" href="destinations.html">' + T('navDest') + '</a></div></div>';
+        return;
+      }
+      var planUrl = 'trip-form.html?dest=' + d.id;
+      var href = TP.user() ? planUrl : 'login.html?next=' + encodeURIComponent(planUrl);
+      document.title = TP.pick(d.name) + ' | TourPlanner';
+      main.innerHTML =
+        '<div class="detail-hero" style="background:' + d.grad + '">' + d.emoji + '</div>' +
+        '<div class="wrap">' +
+          '<a class="back" href="destinations.html">' + T('back') + '</a>' +
+          '<h1 style="margin-top:12px">' + TP.esc(TP.pick(d.name)) + '</h1>' +
+          '<p class="muted">' + TP.esc(TP.pick(d.region)) + '</p>' +
+          '<div class="detail-grid">' +
+            '<div><div class="panel"><p>' + TP.esc(TP.pick(d.desc)) + '</p></div>' +
+              '<div class="panel"><h3>' + T('highlights') + '</h3><ul class="bullets">' +
+                TP.pick(d.hl).map(function (h) { return '<li>' + TP.esc(h) + '</li>'; }).join('') +
+              '</ul></div></div>' +
+            '<div><div class="panel"><ul class="info-list">' +
+              '<li><span class="muted">' + T('bestTime') + '</span><strong>' + TP.esc(TP.pick(d.best)) + '</strong></li>' +
+              '<li><span class="muted">' + T('suggested') + '</span><strong>' + d.days + ' ' + T('days') + '</strong></li>' +
+              '</ul><div style="margin-top:16px"><a class="btn btn-primary" style="width:100%" href="' + href + '">' + T('planThis') + '</a></div></div></div>' +
+          '</div><div style="height:48px"></div>' +
+        '</div>';
+    };
+    TP.init();
+  </script>
+</body>
+</html>
